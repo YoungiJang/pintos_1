@@ -89,7 +89,7 @@ struct thread
     uint8_t *stack;                     /* Saved stack pointer. */
     int priority;                       /* Priority. */
     //mod
-    int sleep_ticks;                    /* Ticks to sleep. */
+    int64_t sleep_ticks;                    /* Ticks to sleep. */
     struct list_elem allelem;           /* List element for all threads list. */
 
     /* Shared between thread.c and synch.c. */
@@ -142,8 +142,8 @@ int thread_get_load_avg (void);
 
 //mod
 int next_wake (void);
-void thread_sleep(int);
-void thread_wake(int);
+void thread_sleep(int64_t);
+void thread_wake(int64_t);
 
 
 #endif /* threads/thread.h */
