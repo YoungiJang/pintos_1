@@ -111,7 +111,7 @@ void thread_wake(int64_t ticks)
 
   for (e = list_begin (&sleep_list); e != list_end (&sleep_list);)
   {
-    t = list_entry (e, struct thread, allelem);
+    t = list_entry (e, struct thread, elem);
     if (t->sleep_ticks > ticks){
       if (update_next_wake >= t->sleep_ticks){
         update_next_wake = t->sleep_ticks;
