@@ -33,7 +33,7 @@
 #include "threads/thread.h"
 
 //mod 2
-bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux)
+bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED)
 {
   struct thread *t_e1;
   struct thread *t_e2;
@@ -86,7 +86,7 @@ sema_down (struct semaphore *sema)
   while (sema->value == 0) 
     {
       //mod 2
-      list_insert_ordered (&sema->waiters, &thread_current ()->elem, &cmp_priority, NULL);
+      list_insert_ordered (&sema->waiters, &thread_current ()->elem, cmp_priority, NULL);
       thread_block ();
     }
   sema->value--;
@@ -319,7 +319,7 @@ cond_wait (struct condition *cond, struct lock *lock)
   
   sema_init (&waiter.semaphore, 0);
   //mod 2
-  list_insert_ordered (&cond->waiters, &waiter.elem, &cmp_sema, NULL);
+  list_insert_ordered (&cond->waiters, &waiter.elem, cmp_sema, NULL);
   //list_push_back (&cond->waiters, &waiter.elem);
   lock_release (lock);
   sema_down (&waiter.semaphore);
