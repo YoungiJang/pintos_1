@@ -79,8 +79,8 @@ static tid_t allocate_tid (void);
 
 //mod
 int next_wake (void);
-void thread_sleep(int ticks);
-void thread_wake(int ticks);
+void thread_sleep(int64_t ticks);
+void thread_wake(int64_t ticks);
 
 int next_wake (void)
 {
