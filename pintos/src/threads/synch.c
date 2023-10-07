@@ -38,11 +38,9 @@ bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux 
   struct thread *t_e1;
   struct thread *t_e2;
 
-  struct semaphore_elem *e1_sem = list_entry(e1, struct semaphore_elem, elem);
-  struct semaphore_elem *e2_sem = list_entry(e2, struct semaphore_elem, elem);
-
-  t_e1 = list_entry (list_begin(&(e1_sem->semaphore.waiters)), struct thread, elem);
-  t_e2 = list_entry (list_begin(&(e2_sem->semaphore.waiters)), struct thread, elem);
+  t_e1 = list_entry (list_begin(&(list_entry(e1, struct semaphore_elem, elem)->semaphore.waiters)), struct thread, elem);
+  t_e2 = list_entry (list_begin(&(list_entry(e2, struct semaphore_elem, elem)->semaphore.waiters)), struct thread, elem);
+  
   if (t_e1->priority > t_e2->priority){
     return true;
   }
