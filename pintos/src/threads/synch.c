@@ -33,25 +33,7 @@
 #include "threads/thread.h"
 
 //mod 2
-bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED)
-{
-  struct thread *t_e1;
-  struct thread *t_e2;
-
-  struct semaphore_elem *e1_sem = list_entry(e1, struct semaphore_elem, elem);
-  struct semaphore_elem *e2_sem = list_entry(e2, struct semaphore_elem, elem);
-
-  struct list *e1_waiters = &(e1_sem->semaphore.waiters);
-  struct list *e2_waiters = &(e2_sem->semaphore.waiters);
-
-  t_e1 = list_entry (list_begin(e1_waiters), struct thread, elem);
-  t_e2 = list_entry (list_begin(e2_waiters), struct thread, elem);
-
-  if (t_e1->priority > t_e2->priority){
-    return true;
-  }
-  return false;
-}
+bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
 
 /* Initializes semaphore SEMA to VALUE.  A semaphore is a
    nonnegative integer along with two atomic operators for
@@ -367,4 +349,25 @@ cond_broadcast (struct condition *cond, struct lock *lock)
 
   while (!list_empty (&cond->waiters))
     cond_signal (cond, lock);
+}
+
+//mod 2
+bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED)
+{
+  struct thread *t_e1;
+  struct thread *t_e2;
+
+  struct semaphore_elem *e1_sem = list_entry(e1, struct semaphore_elem, elem);
+  struct semaphore_elem *e2_sem = list_entry(e2, struct semaphore_elem, elem);
+
+  struct list *e1_waiters = &(e1_sem->semaphore.waiters);
+  struct list *e2_waiters = &(e2_sem->semaphore.waiters);
+
+  t_e1 = list_entry (list_begin(e1_waiters), struct thread, elem);
+  t_e2 = list_entry (list_begin(e2_waiters), struct thread, elem);
+
+  if (t_e1->priority > t_e2->priority){
+    return true;
+  }
+  return false;
 }
