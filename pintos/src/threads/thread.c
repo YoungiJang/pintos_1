@@ -13,8 +13,6 @@
 #include "threads/vaddr.h"
 #ifdef USERPROG
 #include "userprog/process.h"
-//mod
-#include <stdint.h>
 #endif
 
 /* Random value for struct thread's `magic' member.
