@@ -79,8 +79,12 @@ static tid_t allocate_tid (void);
 
 //mod
 int next_wake (void);
-void thread_sleep(int64_t ticks);
-void thread_wake(int64_t ticks);
+void thread_sleep(int ticks);
+void thread_wake(int ticks);
+
+//mod 2
+bool cmp_priority (struct list_elem *e1, struct list_elem *e2, void *aux);
+void cpu_swap (void);
 
 int next_wake (void)
 {
@@ -125,6 +129,31 @@ void thread_wake(int64_t ticks)
   }
   
   min_sleep_ticks = update_next_wake;
+}
+
+//mod 2
+bool cmp_priority (struct list_elem *e1, struct list_elem *e2, void *aux)
+{
+  struct thread *t_e1;
+  struct thread *t_e2;
+  t_e1 = list_entry (e1, struct thread, elem);
+  t_e2 = list_entry (e2, struct thread, elem);
+  if (t_e1->priority > t_e2->priority){
+    return true;
+  }
+  return false;
+}
+
+void cpu_swap (void)
+{
+  struct thread *front;
+  if (!list_empty(&ready_list)){
+    int cur_priority = thread_get_priority();
+    front = list_entry(list_begin(&ready_list), struct thread, elem);
+    if (front->priority > cur_priority){
+      thread_yield();
+    }
+  }
 }
 
 /* Initializes the threading system by transforming the code
@@ -268,6 +297,9 @@ thread_create (const char *name, int priority,
   /* Add to run queue. */
   thread_unblock (t);
 
+  //mod2
+  cpu_swap();
+
   return tid;
 }
 
@@ -277,6 +309,7 @@ thread_create (const char *name, int priority,
    This function must be called with interrupts turned off.  It
    is usually a better idea to use one of the synchronization
    primitives in synch.h. */
+//mod 2
 void
 thread_block (void) 
 {
@@ -304,7 +337,9 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  list_push_back (&ready_list, &t->elem);
+  //mod 2
+  //list_push_back (&ready_list, &t->elem);
+  list_insert_ordered (&ready_list, &t->elem, &cmp_priority, NULL);
   t->status = THREAD_READY;
   intr_set_level (old_level);
 }
@@ -374,8 +409,9 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  if (cur != idle_thread) 
-    list_push_back (&ready_list, &cur->elem);
+  if (cur != idle_thread) //mod 2
+    list_insert_ordered (&ready_list, &cur->elem, &cmp_priority, NULL);
+    //list_push_back (&ready_list, &cur->elem);
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -403,82 +439,7 @@ void
 thread_set_priority (int new_priority) 
 {
   thread_current ()->priority = new_priority;
-}
-
-/* Returns the current thread's priority. */
-int
-thread_get_priority (void) 
-{
-  return thread_current ()->priority;
-}
-
-/* Sets the current thread's nice value to NICE. */
-void
-thread_set_nice (int nice UNUSED) 
-{
-  /* Not yet implemented. */
-}
-
-/* Returns the current thread's nice value. */
-int
-thread_get_nice (void) 
-{
-  /* Not yet implemented. */
-  return 0;
-}
-
-/* Returns 100 times the system load average. */
-int
-thread_get_load_avg (void) 
-{
-  /* Not yet implemented. */
-  return 0;
-}
-
-/* Returns 100 times the current thread's recent_cpu value. */
-int
-thread_get_recent_cpu (void) 
-{
-  /* Not yet implemented. */
-  return 0;
-}
-
-/* Idle thread.  Executes when no other thread is ready to run.
-
-   The idle thread is initially put on the ready list by
-   thread_start().  It will be scheduled once initially, at which
-   point it initializes idle_thread, "up"s the semaphore passed
-   to it to enable thread_start() to continue, and immediately
-   blocks.  After that, the idle thread never appears in the
-   ready list.  It is returned by next_thread_to_run() as a
-   special case when the ready list is empty. */
-static void
-idle (void *idle_started_ UNUSED) 
-{
-  struct semaphore *idle_started = idle_started_;
-  idle_thread = thread_current ();
-  sema_up (idle_started);
-
-  for (;;) 
-    {
-      /* Let someone else run. */
-      intr_disable ();
-      thread_block ();
-
-      /* Re-enable interrupts and wait for the next one.
-
-         The `sti' instruction disables interrupts until the
-         completion of the next instruction, so these two
-         instructions are executed atomically.  This atomicity is
-         important; otherwise, an interrupt could be handled
-         between re-enabling interrupts and waiting for the next
-         one to occur, wasting as much as one clock tick worth of
-         time.
-
-         See [IA32-v2a] "HLT", [IA32-v2b] "STI", and [IA32-v3a]
-         7.11.1 "HLT Instruction". */
-      asm volatile ("sti; hlt" : : : "memory");
-    }
+  cpu_swap();
 }
 
 /* Function used as the basis for a kernel thread. */
