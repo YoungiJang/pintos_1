@@ -175,9 +175,9 @@ timer_interrupt (struct intr_frame *args UNUSED)
   ticks++;
   thread_tick ();
   //mod
-  if (next_wake() <= ticks){
+  //if (next_wake() <= ticks){
     thread_wake(ticks);
-  }
+  //}
 }
 
 /* Returns true if LOOPS iterations waits for more than one timer
