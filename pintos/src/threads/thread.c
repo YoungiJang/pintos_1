@@ -119,7 +119,7 @@ void thread_wake(int64_t ticks)
       e = list_next(e);
     }
     else {
-      list_remove(&t->elem);
+      e = list_remove(e);
       thread_unblock(t);
     }
   }
