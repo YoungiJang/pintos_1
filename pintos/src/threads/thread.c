@@ -14,7 +14,7 @@
 #ifdef USERPROG
 #include "userprog/process.h"
 //mod
-#include <limits.h>
+#include <stdint.h>
 #endif
 
 /* Random value for struct thread's `magic' member.
@@ -56,7 +56,7 @@ static long long kernel_ticks;  /* # of timer ticks in kernel threads. */
 static long long user_ticks;    /* # of timer ticks in user programs. */
 
 //mod
-static int min_sleep_ticks;
+static int64_t min_sleep_ticks;
 
 /* Scheduling. */
 #define TIME_SLICE 4            /* # of timer ticks to give each thread. */
@@ -89,7 +89,7 @@ int next_wake (void)
   return min_sleep_ticks;
 }
 
-void thread_sleep(int ticks)
+void thread_sleep(int64_t ticks)
 { //from thread_yield
   struct thread *cur = thread_current ();
   enum intr_level old_level;
@@ -105,11 +105,11 @@ void thread_sleep(int ticks)
   intr_set_level (old_level);
 }
 
-void thread_wake(int ticks)
+void thread_wake(int64_t ticks)
 { //from thread_foreach
   struct list_elem *e;
   struct thread *t;
-  int update_next_wake = INT_MAX;
+  int64_t update_next_wake = INT64_MAX;
 
   for (e = list_begin (&sleep_list); e != list_end (&sleep_list);)
   {
@@ -122,7 +122,7 @@ void thread_wake(int ticks)
     }
     else {
       list_remove(&t->elem);
-      thread_unblock();
+      thread_unblock(t);
     }
   }
   
@@ -152,7 +152,7 @@ thread_init (void)
   list_init (&all_list);
   //mod
   list_init (&sleep_list);
-  min_sleep_ticks = INT_MAX;
+  min_sleep_ticks = INT64_MAX;
 
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
