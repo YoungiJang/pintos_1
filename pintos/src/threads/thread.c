@@ -83,7 +83,7 @@ void thread_sleep(int ticks);
 void thread_wake(int ticks);
 
 //mod 2
-bool cmp_priority (struct list_elem *e1, struct list_elem *e2, void *aux);
+bool cmp_priority (const struct list_elem *e1, const struct list_elem *e2, void *aux);
 void cpu_swap (void);
 
 int next_wake (void)

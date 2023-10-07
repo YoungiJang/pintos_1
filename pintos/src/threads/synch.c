@@ -33,7 +33,7 @@
 #include "threads/thread.h"
 
 //mod 2
-bool cmp_sema(struct list_elem *e1, struct list_elem *e2, void *aux)
+bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux)
 {
   struct thread *t_e1;
   struct thread *t_e2;
