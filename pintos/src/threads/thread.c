@@ -79,8 +79,8 @@ static tid_t allocate_tid (void);
 
 //mod
 int next_wake (void);
-void thread_sleep(int ticks);
-void thread_wake(int ticks);
+void thread_sleep(int64_t ticks);
+void thread_wake(int64_t ticks);
 
 //mod 2
 bool cmp_priority (const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
@@ -132,7 +132,7 @@ void thread_wake(int64_t ticks)
 }
 
 //mod 2
-bool cmp_priority (struct list_elem *e1, struct list_elem *e2, void *aux)
+bool cmp_priority (struct list_elem *e1, struct list_elem *e2, void *aux UNUSED)
 {
   struct thread *t_e1;
   struct thread *t_e2;
@@ -339,7 +339,7 @@ thread_unblock (struct thread *t)
   ASSERT (t->status == THREAD_BLOCKED);
   //mod 2
   //list_push_back (&ready_list, &t->elem);
-  list_insert_ordered (&ready_list, &t->elem, cmp_priority, NULL);
+  list_insert_ordered (&ready_list, &t->elem, &cmp_priority, NULL);
   t->status = THREAD_READY;
   intr_set_level (old_level);
 }
@@ -410,7 +410,7 @@ thread_yield (void)
 
   old_level = intr_disable ();
   if (cur != idle_thread) //mod 2
-    list_insert_ordered (&ready_list, &cur->elem, cmp_priority, NULL);
+    list_insert_ordered (&ready_list, &cur->elem, &cmp_priority, NULL);
     //list_push_back (&ready_list, &cur->elem);
   cur->status = THREAD_READY;
   schedule ();
