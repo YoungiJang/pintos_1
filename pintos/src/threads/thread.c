@@ -132,7 +132,7 @@ void thread_wake(int64_t ticks)
 }
 
 //mod 2
-bool cmp_priority (struct list_elem *e1, struct list_elem *e2, void *aux UNUSED)
+bool cmp_priority (const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED)
 {
   struct thread *t_e1;
   struct thread *t_e2;
