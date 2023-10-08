@@ -256,11 +256,14 @@ lock_release (struct lock *lock)
   struct list_elem *e;
   struct thread *t;
 
-  for (e = list_begin (&cur->givers); e != list_end (&cur->givers); e = list_next(e))
+  for (e = list_begin (&cur->givers); e != list_end (&cur->givers);)
   {
     t = list_entry (e, struct thread, giveelem);
     if (t->wait_lock == lock){
-      list_remove(&t->giveelem);
+      e = list_remove(e);
+    }
+    else {
+      e = list_next(e);
     }
   }
 
