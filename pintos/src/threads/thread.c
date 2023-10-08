@@ -85,6 +85,7 @@ void thread_wake(int64_t ticks);
 //mod 2
 bool cmp_priority (const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
 void cpu_swap (void);
+void restore_priority (void);
 
 int next_wake (void)
 {
@@ -152,6 +153,21 @@ void cpu_swap (void)
     front = list_entry(list_begin(&ready_list), struct thread, elem);
     if (front->priority > cur_priority){
       thread_yield();
+    }
+  }
+}
+
+void restore_priority (void)
+{
+  struct thread *cur = thread_current();
+  struct thread *t;
+
+  cur->priority = cur->initial_pro;
+  if (!list_empty(&cur->givers)){
+    list_sort(&cur->givers, cmp_don, NULL);
+    t = list_entry(list_front(&cur->givers),struct thread, giveelem);
+    if (t->priority > cur->priority){
+      cur->priority = t->priority;
     }
   }
 }
@@ -439,6 +455,9 @@ void
 thread_set_priority (int new_priority) 
 {
   thread_current ()->priority = new_priority;
+  //mod 2
+  restore_priority();
+  //mod 1
   cpu_swap();
 }
 

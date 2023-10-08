@@ -293,14 +293,7 @@ lock_release (struct lock *lock)
     }
   }
 
-  cur->priority = cur->initial_pro;
-  if (!list_empty(&cur->givers)){
-    list_sort(&cur->givers, cmp_don, NULL);
-    t = list_entry(list_front(&cur->givers),struct thread, giveelem);
-    if (t->priority > cur->priority){
-      cur->priority = t->priority;
-    }
-  }
+  restore_priority();
 
   lock->holder = NULL;
   sema_up (&lock->semaphore);

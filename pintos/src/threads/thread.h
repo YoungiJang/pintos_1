@@ -154,5 +154,6 @@ void thread_wake(int64_t);
 //mod 2
 bool cmp_priority (const struct list_elem *, const struct list_elem *, void * UNUSED);
 void cpu_swap (void);
+void restore_priority (void);
 
 #endif /* threads/thread.h */
