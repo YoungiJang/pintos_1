@@ -11,8 +11,7 @@ struct semaphore
     struct list waiters;        /* List of waiting threads. */
   };
 //mod 2
-bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux);
-bool cmp_don(const struct list_elem *e1, const struct list_elem *e2, void *aux);
+bool cmp_sema(const struct list_elem *, const struct list_elem *, void * UNUSED);
 void priority_donation(void);
 
 void sema_init (struct semaphore *, unsigned value);

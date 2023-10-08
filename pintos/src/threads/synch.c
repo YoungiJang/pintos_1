@@ -34,19 +34,6 @@
 
 //mod 2
 bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
-bool cmp_don(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED)
-{//from cmp_sema
-  struct thread *t_e1;
-  struct thread *t_e2;
-
-  t_e1 = list_entry (e1, struct thread, giveelem);
-  t_e2 = list_entry (e2, struct thread, giveelem);
-
-  if (t_e1->priority > t_e2->priority){
-    return true;
-  }
-  return false;
-}
 
 void priority_donation(void)
 {
