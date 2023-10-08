@@ -239,9 +239,10 @@ lock_acquire (struct lock *lock)
   if (lock->holder != NULL){
     struct thread *cur = thread_current();
     cur->wait_lock = lock;
-    list_push_back(&lock->holder->givers, &cur->giveelem);
+    list_insert_ordered(&lock->holder->givers, &cur->giveelem, &cmp_don, NULL);
     priority_donation();
   }
+  cur->wait_lock = NULL;
 
   sema_down (&lock->semaphore);
   lock->holder = thread_current ();
