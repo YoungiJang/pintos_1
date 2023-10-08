@@ -86,6 +86,8 @@ void thread_wake(int64_t ticks);
 bool cmp_priority (const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
 void cpu_swap (void);
 void restore_priority (void);
+bool cmp_don(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
+void priority_donation(void);
 
 int next_wake (void)
 {
@@ -169,6 +171,23 @@ bool cmp_don(const struct list_elem *e1, const struct list_elem *e2, void *aux U
     return true;
   }
   return false;
+}
+
+void priority_donation(void)
+{
+  int depth = 0;
+  struct thread *cur = thread_current ();
+  struct thread *t;
+
+  while (depth < 8){
+    if (cur->wait_lock == NULL){
+      break;
+    }
+    t = cur->wait_lock->holder;
+    t->priority = cur->priority;
+    cur = t;
+    ++depth;
+  }
 }
 
 void restore_priority (void)
@@ -471,6 +490,7 @@ thread_set_priority (int new_priority)
   thread_current ()->priority = new_priority;
   //mod 2
   restore_priority();
+  priority_donation();
   //mod 1
   cpu_swap();
 }

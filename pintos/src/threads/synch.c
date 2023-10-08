@@ -35,22 +35,6 @@
 //mod 2
 bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
 
-void priority_donation(void)
-{
-  int depth = 0;
-  struct thread *cur = thread_current ();
-  struct thread *t;
-
-  while (depth < 8){
-    if (cur->wait_lock == NULL){
-      break;
-    }
-    t = cur->wait_lock->holder;
-    t->priority = cur->priority;
-    cur = t;
-    ++depth;
-  }
-}
 
 /* Initializes semaphore SEMA to VALUE.  A semaphore is a
    nonnegative integer along with two atomic operators for

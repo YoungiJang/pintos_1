@@ -156,5 +156,7 @@ bool cmp_priority (const struct list_elem *, const struct list_elem *, void * UN
 void cpu_swap (void);
 void restore_priority (void);
 bool cmp_don(const struct list_elem *, const struct list_elem *, void * UNUSED);
+void priority_donation(void);
+
 
 #endif /* threads/thread.h */

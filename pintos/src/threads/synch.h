@@ -12,7 +12,6 @@ struct semaphore
   };
 //mod 2
 bool cmp_sema(const struct list_elem *, const struct list_elem *, void * UNUSED);
-void priority_donation(void);
 
 void sema_init (struct semaphore *, unsigned value);
 void sema_down (struct semaphore *);
