@@ -61,6 +61,7 @@ void priority_donation(void)
     t = cur->wait_lock->holder;
     t->priority = cur->priority;
     cur = t;
+    ++depth;
   }
 }
 
