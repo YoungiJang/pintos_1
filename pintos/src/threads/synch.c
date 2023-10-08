@@ -34,6 +34,35 @@
 
 //mod 2
 bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
+bool cmp_don(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED)
+{//from cmp_sema
+  struct thread *t_e1;
+  struct thread *t_e2;
+
+  t_e1 = list_entry (e1, struct thread, giveelem);
+  t_e2 = list_entry (e2, struct thread, giveelem);
+
+  if (t_e1->priority > t_e2->priority){
+    return true;
+  }
+  return false;
+}
+
+void priority_donation(void)
+{
+  int depth = 0;
+  struct thread *cur = thread_current ();
+  struct thread *t;
+
+  while (depth < 8){
+    if (cur->wait_lock == NULL){
+      break;
+    }
+    t = cur->wait_lock->holder;
+    t->priority = cur->priority;
+    cur = t;
+  }
+}
 
 /* Initializes semaphore SEMA to VALUE.  A semaphore is a
    nonnegative integer along with two atomic operators for
@@ -205,6 +234,14 @@ lock_acquire (struct lock *lock)
   ASSERT (!intr_context ());
   ASSERT (!lock_held_by_current_thread (lock));
 
+  //mod 2
+  if (lock->holder != NULL){
+    struct thread *cur = thread_current();
+    cur->wait_lock = lock;
+    list_push_back(&lock->holder->givers, &cur->giveelem);
+    priority_donation();
+  }
+
   sema_down (&lock->semaphore);
   lock->holder = thread_current ();
 }
@@ -239,6 +276,31 @@ lock_release (struct lock *lock)
 {
   ASSERT (lock != NULL);
   ASSERT (lock_held_by_current_thread (lock));
+
+  //mod 2
+  struct thread *cur = thread_current();
+  struct list_elem *e;
+  struct thread *t;
+
+  for (e = list_begin (&cur->givers); e != list_end (&cur->givers);)
+  {
+    t = list_entry (e, struct thread, giveelem);
+    if (t->wait_lock == lock){
+      e = list_remove(e);
+    }
+    else {
+      e = list_next(e);
+    }
+  }
+
+  cur->priority = cur->initial_pro;
+  if (!list_empty(&cur->givers)){
+    list_sort(&cur->givers, cmp_don, NULL);
+    t = list_entry(list_front(&cur->givers),struct thread, giveelem);
+    if (t->priority > cur->priority){
+      cur->priority = t->priority;
+    }
+  }
 
   lock->holder = NULL;
   sema_up (&lock->semaphore);
@@ -353,7 +415,7 @@ cond_broadcast (struct condition *cond, struct lock *lock)
 
 //mod 2
 bool cmp_sema(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED)
-{
+{//from cmp_priority
   struct thread *t_e1;
   struct thread *t_e2;
 

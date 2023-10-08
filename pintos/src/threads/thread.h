@@ -90,6 +90,12 @@ struct thread
     int priority;                       /* Priority. */
     //mod
     int64_t sleep_ticks;                    /* Ticks to sleep. */
+    //mod 2
+    int initial_pro
+    struct lock *wait_lock;
+    struct list givers;
+    struct list_elem giveelem;
+
     struct list_elem allelem;           /* List element for all threads list. */
 
     /* Shared between thread.c and synch.c. */
