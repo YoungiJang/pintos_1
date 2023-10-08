@@ -151,9 +151,8 @@ void cpu_swap (void)
 {
   struct thread *front;
   if (!list_empty(&ready_list)){
-    int cur_priority = thread_get_priority();
     front = list_entry(list_begin(&ready_list), struct thread, elem);
-    if (front->priority > cur_priority){
+    if (front->priority > thread_current()->priority){
       thread_yield();
     }
   }
