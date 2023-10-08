@@ -236,15 +236,16 @@ lock_acquire (struct lock *lock)
   ASSERT (!lock_held_by_current_thread (lock));
 
   //mod 2
+  struct thread *cur = thread_current();
   if (lock->holder != NULL){
-    struct thread *cur = thread_current();
     cur->wait_lock = lock;
     list_insert_ordered(&lock->holder->givers, &cur->giveelem, &cmp_don, NULL);
     priority_donation();
   }
-  cur->wait_lock = NULL;
 
   sema_down (&lock->semaphore);
+  //mod 2
+  cur->wait_lock = NULL;
   lock->holder = thread_current ();
 }
 
