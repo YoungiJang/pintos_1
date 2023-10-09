@@ -161,5 +161,10 @@ void restore_priority (void);
 bool cmp_don(const struct list_elem *, const struct list_elem *, void * UNUSED);
 void priority_donation(void);
 
+//mod 3
+void mlfqs_calcul_priority(struct thread *);
+void mlfqs_calcul_recent_cpu(struct thread *);
+void mlfqs_calcul_load_avg(void);
+
 
 #endif /* threads/thread.h */
