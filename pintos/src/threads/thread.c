@@ -546,8 +546,9 @@ mlfqs_calcul_load_avg(void)
     {
         ready_threads = list_size(&ready_list) + 1;
     }
-    load_avg = add_fp_fp(multiply_fp(divide_fp(int_to_fp(59), int_to_fp(60)), load_avg), multiply_int(divide_fp(int_to_fp(1), int_to_fp(60)), ready_threads));
+    load_avg = add_fp_fp(multiply_fp(divide_fp(int_fp(59), int_fp(60)), load_avg), multiply_int(divide_fp(int_fp(1), int_fp(60)), ready_threads));
 }
+
 
 /* Sets the current thread's nice value to NICE. */
 void
@@ -573,8 +574,10 @@ thread_get_load_avg (void)
 {
    //mod 3
   enum intr_level old_level=intr_disable();
+   int mul_load_avg;
+   mul_load_avg=fp_int_round(multiply_int(load_avg,100));
    intr_set_level(old_level);
-  return 0;
+  return mul_load_avg;
 }
 
 /* Returns 100 times the current thread's recent_cpu value. */
@@ -583,8 +586,10 @@ thread_get_recent_cpu (void)
 {
    //mod 3
   enum intr_level old_level=intr_disable();
+   int mul_recent_cpu;
+   mul_recent_cpu=fp_int_round(multiply_int(thread_current()->recent_cpu,100));
    intr_set_level(old_level);
-  return 0;
+  return mul_recent_cpu;
 }
 
 /* Idle thread.  Executes when no other thread is ready to run.
