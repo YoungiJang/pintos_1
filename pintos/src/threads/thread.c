@@ -504,8 +504,6 @@ thread_set_priority (int new_priority)
   thread_current ()->initial_pro = new_priority;
   //mod 2
   restore_priority();
-  priority_donation();
-  //mod 1
   cpu_swap();
 }
 
