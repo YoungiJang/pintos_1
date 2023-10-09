@@ -246,9 +246,6 @@ thread_init (void)
   init_thread (initial_thread, "main", PRI_DEFAULT);
   initial_thread->status = THREAD_RUNNING;
   initial_thread->tid = allocate_tid ();
-  //mod 3
-  initial_thread->nice=0;
-  initial_thread->recent_cpu=0;
 }
 
 /* Starts preemptive thread scheduling by enabling interrupts.
@@ -718,6 +715,9 @@ init_thread (struct thread *t, const char *name, int priority)
   list_init(&t->givers);
   t->initial_pro = priority;
   t->wait_lock = NULL;
+   //mod 3
+  t->nice=0;
+  t->recent_cpu=0;
 
   list_push_back (&all_list, &t->allelem);
 }
