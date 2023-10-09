@@ -157,7 +157,7 @@ void cpu_swap (void)
 {
   struct thread *front;
   if (!list_empty(&ready_list)){
-    front = list_entry(list_begin(&ready_list), struct thread, elem);
+    front = list_entry(list_front(&ready_list), struct thread, elem);
     if (front->priority > thread_current()->priority){
       thread_yield();
     }
@@ -514,6 +514,39 @@ int
 thread_get_priority (void) 
 {
   return thread_current ()->priority;
+}
+
+//mod 3
+void
+mlfqs_calcul_priority(struct thread *t)
+{
+   if(t!=idle_thread)
+   {
+      t->priority=fp_int_zero(add_int_fp(63-t->nice*2,divide_fp(t->recent_cpu,-4)));  
+   }
+}
+
+void
+mlfqs_calcul_recent_cpu(struct thread *t)
+{
+   if(t!=idle_thread)
+   {
+      t->recent_cpu=add_int_fp(multiply_fp(divide_fp(multiply_int(load_avg,2),add_int_fp(multiply_int(2*load_avg),1)),t->recent_cpu),t->nice);
+   }
+}
+void
+mlfqs_calcul_load_avg(void)
+{
+    int ready_threads = 0;
+    if (thread_current() == idle_thread)
+    {
+        ready_threads = list_size(&ready_list);
+    }
+    else
+    {
+        ready_threads = list_size(&ready_list) + 1;
+    }
+    load_avg = add_fp_fp(multiply_fp(divide_fp(int_to_fp(59), int_to_fp(60)), load_avg), multiply_int(divide_fp(int_to_fp(1), int_to_fp(60)), ready_threads));
 }
 
 /* Sets the current thread's nice value to NICE. */
