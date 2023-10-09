@@ -205,7 +205,13 @@ lock_acquire (struct lock *lock)
   ASSERT (lock != NULL);
   ASSERT (!intr_context ());
   ASSERT (!lock_held_by_current_thread (lock));
-
+//mod 3
+if (thread_mlfqs)
+{
+    sema_down(&lock->semaphore);
+    lock->holder = thread_current();
+    return;
+}
   //mod 2
   struct thread *cur = thread_current();
   if (lock->holder != NULL){
@@ -250,7 +256,13 @@ lock_release (struct lock *lock)
 {
   ASSERT (lock != NULL);
   ASSERT (lock_held_by_current_thread (lock));
-
+   //mod 3
+  if (thread_mlfqs)
+{
+    lock->holder = NULL;
+    sema_up(&lock->semaphore);
+    return;
+}
   //mod 2
   struct thread *cur = thread_current();
   struct list_elem *e;
