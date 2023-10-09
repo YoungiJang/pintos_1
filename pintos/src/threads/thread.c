@@ -89,6 +89,7 @@ void restore_priority (void);
 bool cmp_don(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
 void priority_donation(void);
 
+//mod
 int next_wake (void)
 {
   return min_sleep_ticks;
@@ -345,7 +346,7 @@ thread_create (const char *name, int priority,
   /* Add to run queue. */
   thread_unblock (t);
 
-  //mod2
+  //mod 2
   cpu_swap();
 
   return tid;
