@@ -526,7 +526,7 @@ mlfqs_calcul_priority(struct thread *t)
 {
    if(t!=idle_thread)
    {
-      t->priority=fp_int_zero(add_int_fp(63-t->nice*2,divide_fp(t->recent_cpu,-4)));  
+      t->priority=fp_int_zero(add_int_fp(divide_fp(t->recent_cpu,-4),63-t->nice*2));  
    }
 }
 
@@ -535,7 +535,7 @@ mlfqs_calcul_recent_cpu(struct thread *t)
 {
    if(t!=idle_thread)
    {
-      t->recent_cpu=add_int_fp(multiply_fp(divide_fp(multiply_int(load_avg,2),add_int_fp(multiply_int(2,load_avg),1)),t->recent_cpu),t->nice);
+      t->recent_cpu=add_int_fp(multiply_fp(divide_fp(multiply_int(load_avg,2),add_int_fp(multiply_int(load_avg,2),1)),t->recent_cpu),t->nice);
    }
 }
 void
