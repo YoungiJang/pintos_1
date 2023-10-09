@@ -550,6 +550,33 @@ mlfqs_calcul_load_avg(void)
     load_avg = add_fp_fp(multiply_fp(divide_fp(int_fp(59), int_fp(60)), load_avg), multiply_int(divide_fp(int_fp(1), int_fp(60)), ready_threads));
 }
 
+//mod 3
+void
+mlfqs_increment_recent_cpu()
+{
+    if (thread_current() != idle_thread)
+        thread_current()->recent_cpu = add_int_fp(thread_current()->recent_cpu, 1);
+}
+void
+mlfqs_recalculate_recent_cpu()
+{
+    struct list_elem* e;
+    for (e = list_begin(&all_list); e != list_end(&all_list); e = list_next(e)) {
+        struct thread* t = list_entry(e, struct thread, allelem);
+        mlfqs_calcul_recent_cpu(t);
+    }
+}
+void
+mlfqs_recalculate_priority(void)
+{
+    struct list_elem* e;
+
+    for (e = list_begin(&all_list); e != list_end(&all_list); e = list_next(e)) {
+        struct thread* t = list_entry(e, struct thread, allelem);
+        mlfqs_calcul_priority(t);
+    }
+}
+
 
 /* Sets the current thread's nice value to NICE. */
 void
