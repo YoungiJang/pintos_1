@@ -96,6 +96,9 @@ int load_avg;
 void mlfqs_calcul_priority(struct thread *t);
 void mlfqs_calcul_recent_cpu(struct thread *t);
 void mlfqs_calcul_load_avg(void);
+void mlfqs_increment_recent_cpu(void);
+void mlfqs_recalculate_recent_cpu(void);
+void mlfqs_recalculate_priority(void);
 
 //mod
 int next_wake (void)
@@ -552,13 +555,13 @@ mlfqs_calcul_load_avg(void)
 
 //mod 3
 void
-mlfqs_increment_recent_cpu()
+mlfqs_increment_recent_cpu(void)
 {
     if (thread_current() != idle_thread)
         thread_current()->recent_cpu = add_int_fp(thread_current()->recent_cpu, 1);
 }
 void
-mlfqs_recalculate_recent_cpu()
+mlfqs_recalculate_recent_cpu(void)
 {
     struct list_elem* e;
     for (e = list_begin(&all_list); e != list_end(&all_list); e = list_next(e)) {
