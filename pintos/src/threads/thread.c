@@ -246,6 +246,8 @@ thread_init (void)
   init_thread (initial_thread, "main", PRI_DEFAULT);
   initial_thread->status = THREAD_RUNNING;
   initial_thread->tid = allocate_tid ();
+   //mod 3
+  load_avg=0;
 }
 
 /* Starts preemptive thread scheduling by enabling interrupts.
@@ -263,8 +265,6 @@ thread_start (void)
 
   /* Wait for the idle thread to initialize idle_thread. */
   sema_down (&idle_started);
-  //mod 3
-  load_avg=0;
 }
 
 /* Called by the timer interrupt handler at each timer tick.
