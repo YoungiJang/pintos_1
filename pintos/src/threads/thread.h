@@ -165,6 +165,9 @@ void priority_donation(void);
 void mlfqs_calcul_priority(struct thread *);
 void mlfqs_calcul_recent_cpu(struct thread *);
 void mlfqs_calcul_load_avg(void);
+void mlfqs_increment_recent_cpu(void);
+void mlfqs_recalculate_recent_cpu(void);
+void mlfqs_recalculate_priority(void);
 
 
 #endif /* threads/thread.h */
