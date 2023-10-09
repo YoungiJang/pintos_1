@@ -66,7 +66,7 @@ int multiply_int(int x, int n)
 
 int divide_fp(int x, int y)
 {
-    return ((int64_t)x) * y / F;
+    return ((int64_t)x) * F / y;
 }
 
 int divide_int(int x, int n)
