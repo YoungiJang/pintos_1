@@ -520,22 +520,27 @@ thread_get_priority (void)
 void
 thread_set_nice (int nice UNUSED) 
 {
-  /* Not yet implemented. */
+  //mod 3
 }
 
 /* Returns the current thread's nice value. */
 int
 thread_get_nice (void) 
 {
-  /* Not yet implemented. */
-  return 0;
+   //mod 3
+   intr_disable();
+   int nice=thread_current()->nice;
+   intr_enable();
+   return nice;
 }
 
 /* Returns 100 times the system load average. */
 int
 thread_get_load_avg (void) 
 {
-  /* Not yet implemented. */
+   //mod 3
+  intr_disable();
+  intr_enable();
   return 0;
 }
 
@@ -543,7 +548,9 @@ thread_get_load_avg (void)
 int
 thread_get_recent_cpu (void) 
 {
-  /* Not yet implemented. */
+   //mod 3
+  intr_disable();
+   intr_enable();
   return 0;
 }
 
