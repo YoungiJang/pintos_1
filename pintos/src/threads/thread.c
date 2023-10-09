@@ -529,7 +529,7 @@ mlfqs_calcul_recent_cpu(struct thread *t)
 {
    if(t!=idle_thread)
    {
-      t->recent_cpu=add_int_fp(multiply_fp(divide_fp(multiply_int(load_avg,2),add_int_fp(multiply_int(2*load_avg),1)),t->recent_cpu),t->nice);
+      t->recent_cpu=add_int_fp(multiply_fp(divide_fp(multiply_int(load_avg,2),add_int_fp(multiply_int(2,load_avg),1)),t->recent_cpu),t->nice);
    }
 }
 void
