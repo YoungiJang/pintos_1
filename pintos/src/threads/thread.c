@@ -91,6 +91,9 @@ void restore_priority (void);
 bool cmp_don(const struct list_elem *e1, const struct list_elem *e2, void *aux UNUSED);
 void priority_donation(void);
 
+//mod 3
+int load_avg;
+
 //mod
 int next_wake (void)
 {
@@ -232,9 +235,6 @@ thread_init (void)
   list_init (&sleep_list);
   min_sleep_ticks = INT64_MAX;
 
-  //mod 3
-  
-
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
   init_thread (initial_thread, "main", PRI_DEFAULT);
@@ -260,6 +260,8 @@ thread_start (void)
 
   /* Wait for the idle thread to initialize idle_thread. */
   sema_down (&idle_started);
+  //mod 3
+  load_avg=0;
 }
 
 /* Called by the timer interrupt handler at each timer tick.
