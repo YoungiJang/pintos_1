@@ -11,10 +11,10 @@
 #include "threads/switch.h"
 #include "threads/synch.h"
 #include "threads/vaddr.h"
-#ifdef USERPROG
-#include "userprog/process.h"
 //mod 3
 #include "threads/calculate.h"
+#ifdef USERPROG
+#include "userprog/process.h"
 #endif
 
 /* Random value for struct thread's `magic' member.
