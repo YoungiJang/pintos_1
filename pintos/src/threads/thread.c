@@ -643,9 +643,6 @@ init_thread (struct thread *t, const char *name, int priority)
   list_init(&t->givers);
   t->initial_pro = priority;
   t->wait_lock = NULL;
-  //mod 3
-  t->nice=running_thread()->nice;
-  t->recent_cpu=running_thread()->recent_cpu;
 
   list_push_back (&all_list, &t->allelem);
 }
