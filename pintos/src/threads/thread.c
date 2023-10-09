@@ -583,6 +583,12 @@ void
 thread_set_nice (int nice UNUSED) 
 {
   //mod 3
+   enum intr_level old_level = intr_disable();
+   thread_current()->nice = nice;
+   mlfqs_calcul_priority(thread_current());
+   if (!list_empty(&ready_list) && thread_current()->priority < list_entry(list_front(&ready_list), struct thread, elem)->priority)
+       thread_yield();
+   intr_set_level(old_level);
 }
 
 /* Returns the current thread's nice value. */
