@@ -528,9 +528,9 @@ int
 thread_get_nice (void) 
 {
    //mod 3
-   intr_disable();
+   enum intr_level old_level=intr_disable();
    int nice=thread_current()->nice;
-   intr_enable();
+   intr_set_level(old_level);
    return nice;
 }
 
@@ -539,8 +539,8 @@ int
 thread_get_load_avg (void) 
 {
    //mod 3
-  intr_disable();
-  intr_enable();
+  enum intr_level old_level=intr_disable();
+   intr_set_level(old_level);
   return 0;
 }
 
@@ -549,8 +549,8 @@ int
 thread_get_recent_cpu (void) 
 {
    //mod 3
-  intr_disable();
-   intr_enable();
+  enum intr_level old_level=intr_disable();
+   intr_set_level(old_level);
   return 0;
 }
 
