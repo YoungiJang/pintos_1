@@ -93,6 +93,9 @@ void priority_donation(void);
 
 //mod 3
 int load_avg;
+void mlfqs_calcul_priority(struct thread *t);
+void mlfqs_calcul_recent_cpu(struct thread *t);
+void mlfqs_calcul_load_avg(void);
 
 //mod
 int next_wake (void)
