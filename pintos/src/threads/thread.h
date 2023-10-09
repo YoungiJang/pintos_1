@@ -95,6 +95,9 @@ struct thread
     struct lock *wait_lock;
     struct list givers;
     struct list_elem giveelem;
+    //mod 3
+    int nice;
+    int recent_cpu;
 
     struct list_elem allelem;           /* List element for all threads list. */
 
