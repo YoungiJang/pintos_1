@@ -489,6 +489,7 @@ thread_foreach (thread_action_func *func, void *aux)
 void
 thread_set_priority (int new_priority) 
 {
+   //mod 3
    if(thread_mlfqs){
       return;
    }
